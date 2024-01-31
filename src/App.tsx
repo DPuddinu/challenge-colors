@@ -5,10 +5,34 @@ import { ListItemProps } from "./components/ListItem";
 const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
 
 const App = () => {
-  const [left, setLeft] = useState<ListItemProps[]>(
-    colors.map((color) => ({ label: color, value: false }))
-  );
+  
+  const [left, setLeft] = useState<ListItemProps[]>(colors.map((color) => ({ label: color, value: false })));
   const [right, setRight] = useState<ListItemProps[]>([]);
+
+  function moveTo(
+    from: ListItemProps[],
+    setFrom:  React.Dispatch<React.SetStateAction<ListItemProps[]>>,
+    setTo:  React.Dispatch<React.SetStateAction<ListItemProps[]>>
+  ) {
+    const checked: ListItemProps[] = [];
+    const nonchecked: ListItemProps[] = [];
+
+    from.forEach((item) => {
+      if (item.value) {
+        checked.push(item);
+      } else {
+        nonchecked.push(item);
+      }
+    });
+
+    setTo((old) => [
+      ...old,
+      ...checked.map((item) => {
+        return { label: item.label, value: false };
+      }),
+    ]);
+    setFrom((old) => old.filter((item) => !item.value));
+  }
 
   return (
     <div className="bg-slate-700 h-screen w-screen p-4">
@@ -29,51 +53,13 @@ const App = () => {
         <div className="flex flex-col gap-2 justify-center">
           <button
             className="rounded w-24 h-18 bg-slate-400 shadow"
-            onClick={() => {
-              const checked: ListItemProps[] = [];
-              const nonchecked: ListItemProps[] = [];
-
-              right.forEach((item) => {
-                if (item.value) {
-                  checked.push(item);
-                } else {
-                  nonchecked.push(item);
-                }
-              });
-
-              setLeft((old) => [
-                ...old,
-                ...checked.map((item) => {
-                  return { label: item.label, value: false };
-                }),
-              ]);
-              setRight((old) => old.filter((item) => !item.value));
-            }}
+            onClick={() => moveTo(right, setRight, setLeft)}
           >
             {"<"}
           </button>
           <button
             className="rounded w-24 h-18 bg-slate-400 shadow"
-            onClick={() => {
-              const checked: ListItemProps[] = [];
-              const nonchecked: ListItemProps[] = [];
-
-              left.forEach((item) => {
-                if (item.value) {
-                  checked.push(item);
-                } else {
-                  nonchecked.push(item);
-                }
-              });
-
-              setRight((old) => [
-                ...old,
-                ...checked.map((item) => {
-                  return { label: item.label, value: false };
-                }),
-              ]);
-              setLeft((old) => old.filter((item) => !item.value));
-            }}
+            onClick={() => moveTo(left, setLeft, setRight)}
           >
             {">"}
           </button>

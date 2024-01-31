@@ -7,8 +7,11 @@ export interface ListItemProps {
 }
 
 export const ListItem = ({ label }: Omit<ListItemProps, "value">) => {
+  
   const listContext = useContext(ListContext);
 
+  if (!listContext) throw new Error("No list context");
+  
   return (
     <div className="flex gap-2">
       <input

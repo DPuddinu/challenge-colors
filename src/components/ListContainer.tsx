@@ -6,15 +6,11 @@ interface ListContainerProps {
   onChange: (item: ListItemProps) => void;
 }
 
-export const ListContext = createContext<ListContainerProps>({
-  items: [],
-  onChange: () => {},
-});
+export const ListContext = createContext<ListContainerProps | null>(null);
 
 export const ListContainer = ({ items, onChange }: ListContainerProps) => {
   return (
-    <ListContext.Provider
-      value={{
+    <ListContext.Provider value={{
         items,
         onChange,
       }}
